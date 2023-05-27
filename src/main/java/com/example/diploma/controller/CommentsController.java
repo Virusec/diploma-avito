@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class CommentsController {
 
     @GetMapping("/{id}/comments")
-    public ResponseEntity<?> getAds(@PathVariable int id) {
+    public ResponseEntity<?> getComments(@PathVariable int id) {
         return ResponseEntity.ok(new ResponseWrapperComment());
     }
 

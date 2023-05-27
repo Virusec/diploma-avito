@@ -24,13 +24,13 @@ public class UserController {
         return ResponseEntity.ok(new User());
     }
 
-    @PutMapping("/me")
+    @PatchMapping("/me")
     public ResponseEntity<?> updateUser(@RequestBody User newUser) {
         return ResponseEntity.ok(new User());
     }
 
-    @PutMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateUserImage(@RequestBody MultipartFile image) {
+    @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateUserImage(@RequestParam MultipartFile image) {
         return ResponseEntity.ok().build();
     }
 

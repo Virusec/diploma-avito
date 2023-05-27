@@ -21,7 +21,7 @@ public class AdsController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> addAd(@RequestBody CreateAds properties, @RequestBody MultipartFile image) {
+    public ResponseEntity<?> addAd(@RequestParam CreateAds properties, @RequestParam MultipartFile image) {
         return ResponseEntity.ok(new Ads());
     }
 
@@ -35,7 +35,7 @@ public class AdsController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<?> updateAds(@PathVariable int id, @RequestBody CreateAds ads) {
         return ResponseEntity.ok(new Ads());
     }
@@ -44,8 +44,8 @@ public class AdsController {
     public ResponseEntity<?> getAdsMe() {
         return ResponseEntity.ok(new ResponseWrapperAds());
     }
-    @PutMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateImage(@PathVariable int id, @RequestBody MultipartFile image) {
+    @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateImage(@PathVariable int id, @RequestParam MultipartFile image) {
         return ResponseEntity.ok().build();
     }
 
