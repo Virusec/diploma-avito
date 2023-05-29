@@ -2,7 +2,7 @@ package com.example.diploma.dto;
 
 import lombok.Data;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author anna
@@ -10,5 +10,5 @@ import java.util.ArrayList;
 @Data
 public class ResponseWrapperAds {
     private int count;
-    private ArrayList<Ads> results;
+    private List<Ads> results;
 }

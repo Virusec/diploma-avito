@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class CommentsController {
 
     @GetMapping("/{id}/comments")
-    public ResponseEntity<?> getComments(@PathVariable int id) {
+    public ResponseEntity<ResponseWrapperComment> getComments(@PathVariable int id) {
         return ResponseEntity.ok(new ResponseWrapperComment());
     }
 
     @PostMapping("/{id}/comments")
-    public ResponseEntity<?> addComment(@PathVariable int id, @RequestBody CreateComment comment) {
+    public ResponseEntity<Comment> addComment(@PathVariable int id, @RequestBody CreateComment comment) {
         return ResponseEntity.ok(new Comment());
     }
 
@@ -29,7 +29,7 @@ public class CommentsController {
     }
 
     @PatchMapping("/{adId}/comments/{commentId}")
-    public ResponseEntity<?> updateComment(@PathVariable int adId, @PathVariable int commentId,
+    public ResponseEntity<Comment> updateComment(@PathVariable int adId, @PathVariable int commentId,
                                            @RequestBody Comment newComment) {
         return ResponseEntity.ok(new Comment());
     }

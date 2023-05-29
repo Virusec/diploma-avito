@@ -16,17 +16,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class AdsController {
     @GetMapping
-    public ResponseEntity<?> getAllAds() {
+    public ResponseEntity<ResponseWrapperAds> getAllAds() {
         return ResponseEntity.ok(new ResponseWrapperAds());
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> addAd(@RequestParam CreateAds properties, @RequestParam MultipartFile image) {
+    public ResponseEntity<Ads> addAd(@RequestParam CreateAds properties, @RequestPart MultipartFile image) {
         return ResponseEntity.ok(new Ads());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getAds(@PathVariable int id) {
+    public ResponseEntity<FullAds> getAds(@PathVariable int id) {
         return ResponseEntity.ok(new FullAds());
     }
 
@@ -36,16 +36,17 @@ public class AdsController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateAds(@PathVariable int id, @RequestBody CreateAds ads) {
+    public ResponseEntity<Ads> updateAds(@PathVariable int id, @RequestBody CreateAds ads) {
         return ResponseEntity.ok(new Ads());
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> getAdsMe() {
+    public ResponseEntity<ResponseWrapperAds> getAdsMe() {
         return ResponseEntity.ok(new ResponseWrapperAds());
     }
+
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateImage(@PathVariable int id, @RequestParam MultipartFile image) {
+    public ResponseEntity<?> updateImage(@PathVariable int id, @RequestPart MultipartFile image) {
         return ResponseEntity.ok().build();
     }
 
