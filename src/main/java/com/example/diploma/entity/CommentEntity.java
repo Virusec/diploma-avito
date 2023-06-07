@@ -20,5 +20,6 @@ public class CommentEntity {
     private int author;
     @Column(name = "created_at")
     private long createdAt;
+    @Column(name = "comments_text")
     private String text;
 }
