@@ -17,7 +17,6 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String password;
-    private String username;
     private String email;
     @Column(name = "first_name")
     private String firstName;
