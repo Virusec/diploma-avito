@@ -1,6 +1,5 @@
 package com.example.diploma.entity;
 
-import com.example.diploma.dto.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,5 +24,5 @@ public class UserEntity {
     @Column(name = "last_name")
     private String lastName;
     private String phone;
-    private Role role;
+    private String role;
 }
