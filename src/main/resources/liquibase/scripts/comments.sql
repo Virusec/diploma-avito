@@ -7,3 +7,7 @@ create table comments
         created_at     bigint not null ,
         comments_text  text
 );
+
+-- changeset anna:2
+alter table comments
+    add column ad_id int not null references ads (ad_id);
