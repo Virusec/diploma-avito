@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+ * @author anna
+ */
 @Entity
 @Table(name = "ads")
 @Data

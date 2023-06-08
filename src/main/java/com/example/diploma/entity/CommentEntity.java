@@ -5,7 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
+/**
+ * @author anna
+ */
 @Entity
 @Table(name = "comments")
 @Data
@@ -19,7 +23,9 @@ public class CommentEntity {
     @Column(name = "user_id")
     private int author;
     @Column(name = "created_at")
-    private long createdAt;
+    private LocalDateTime createdAt;
     @Column(name = "comments_text")
     private String text;
+    @Column(name = "ad_id")
+    private int adId;
 }
