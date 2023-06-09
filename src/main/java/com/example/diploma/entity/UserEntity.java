@@ -29,4 +29,10 @@ public class UserEntity {
     private String phone;
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    //TODO: переделать получение пути файла, когда будем делать хранение картинок
+    public String getImagePath() {
+        return "images/1.jpeg";
+    }
+
 }
