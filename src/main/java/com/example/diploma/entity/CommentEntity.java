@@ -29,5 +29,12 @@ public class CommentEntity {
     private String text;
     @ManyToOne
     @JoinColumn(name = "ad_id")
-    private AdEntity adId;
+    private AdEntity ad;
+
+    public CommentEntity(UserEntity author, LocalDateTime createdAt, String text, AdEntity ad) {
+        this.author = author;
+        this.createdAt = createdAt;
+        this.text = text;
+        this.ad = ad;
+    }
 }
