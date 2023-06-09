@@ -25,4 +25,17 @@ public class AdEntity {
     private String title;
     private int price;
     private String description;
+
+    public AdEntity(UserEntity author, String title, int price, String description) {
+        this.author = author;
+        this.title = title;
+        this.price = price;
+        this.description = description;
+    }
+
+    //TODO: переделать получение пути файла, когда будем делать хранение картинок
+    public String getImagePath() {
+        return "ads-images/1.jpeg";
+    }
+
 }
