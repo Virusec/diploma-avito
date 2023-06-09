@@ -19,8 +19,9 @@ public class AdEntity {
     @Column(name = "ad_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pk;
-    @Column(name = "user_id")
-    private int author;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity author;
     private String title;
     private int price;
     private String description;

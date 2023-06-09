@@ -20,12 +20,14 @@ public class CommentEntity {
     @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pk;
-    @Column(name = "user_id")
-    private int author;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity author;
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     @Column(name = "comments_text")
     private String text;
-    @Column(name = "ad_id")
-    private int adId;
+    @ManyToOne
+    @JoinColumn(name = "ad_id")
+    private AdEntity adId;
 }
