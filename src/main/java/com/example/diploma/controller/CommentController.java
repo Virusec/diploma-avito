@@ -3,15 +3,22 @@ package com.example.diploma.controller;
 import com.example.diploma.dto.Comment;
 import com.example.diploma.dto.CreateComment;
 import com.example.diploma.dto.ResponseWrapperComment;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * @author anna
  */
+@Slf4j
+@CrossOrigin(value = "http://localhost:3000")
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/ads")
-public class CommentsController {
+public class CommentController {
+    private final CommentService commentService;
+    private final UserService userService;
 
     @GetMapping("/{id}/comments")
     public ResponseEntity<ResponseWrapperComment> getComments(@PathVariable int id) {

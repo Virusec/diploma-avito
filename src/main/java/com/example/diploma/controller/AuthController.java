@@ -19,7 +19,7 @@ import static com.example.diploma.dto.Role.USER;
  * @author Anatoliy Shikin
  */
 @Slf4j
-//@CrossOrigin(value = "http://localhost:3000")
+@CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
