@@ -3,6 +3,8 @@ package com.example.diploma.controller;
 import com.example.diploma.dto.Comment;
 import com.example.diploma.dto.CreateComment;
 import com.example.diploma.dto.ResponseWrapperComment;
+import com.example.diploma.service.CommentService;
+import com.example.diploma.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
