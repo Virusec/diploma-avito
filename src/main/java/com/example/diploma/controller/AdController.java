@@ -45,13 +45,13 @@ public class AdController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> removeAd(@PathVariable int id) {
-        adService.deleteAd(id);
+        adService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Ads> updateAds(@PathVariable int id, @RequestBody CreateAds ads) {
-        return ResponseEntity.ok(adService.updateAds(id, ads));
+        return ResponseEntity.ok(adService.update(id, ads));
     }
 
     @GetMapping("/me")

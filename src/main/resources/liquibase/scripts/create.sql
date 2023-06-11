@@ -28,5 +28,7 @@ create table comments
     user_id        int not null references users(user_id),
     created_at     timestamptz not null ,
     comments_text  text,
-    ad_id int not null references ads (ad_id)
+    ad_id int not null references ads (ad_id) on delete cascade
 );
+
+

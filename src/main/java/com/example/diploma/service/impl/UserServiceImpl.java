@@ -20,17 +20,17 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     //TODO: ImageService
-    private final UserMapper userMapper;
+    private final UserMapper mapper;
 
     @Override
     public User add(RegisterReq req) {
-        return userMapper.entityToUserDto(userRepository.save(userMapper.registerReqDtoToEntity(req)));
+        return mapper.entityToUserDto(userRepository.save(mapper.registerReqDtoToEntity(req)));
     }
 
     @Override
     public User update(User user, String name) {
         UserEntity entity = userRepository.findByEmail(name);
-        return userMapper.entityToUserDto(userRepository.save(userMapper.userDtoToEntity(user, entity)));
+        return mapper.entityToUserDto(userRepository.save(mapper.userDtoToEntity(user, entity)));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User get(String name) {
-        return userMapper.entityToUserDto(getEntity(name));
+        return mapper.entityToUserDto(getEntity(name));
     }
 
     @Override

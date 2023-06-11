@@ -18,7 +18,7 @@ public interface AdService {
 
     ResponseWrapperAds getAllMyAds(String name);
 
-    void deleteAd(int id);
+    void delete(int id);
 
-    Ads updateAds(int id, CreateAds ads);
+    Ads update(int id, CreateAds ads);
 }

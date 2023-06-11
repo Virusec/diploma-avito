@@ -4,10 +4,10 @@ import com.example.diploma.dto.Comment;
 import com.example.diploma.dto.CreateComment;
 import com.example.diploma.dto.ResponseWrapperComment;
 import com.example.diploma.service.CommentService;
-import com.example.diploma.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -20,20 +20,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/ads")
 public class CommentController {
     private final CommentService commentService;
-    private final UserService userService;
 
     @GetMapping("/{id}/comments")
     public ResponseEntity<ResponseWrapperComment> getComments(@PathVariable int id) {
-        return ResponseEntity.ok(new ResponseWrapperComment());
+        return ResponseEntity.ok(commentService.getComments(id));
     }
 
     @PostMapping("/{id}/comments")
-    public ResponseEntity<Comment> addComment(@PathVariable int id, @RequestBody CreateComment comment) {
-        return ResponseEntity.ok(new Comment());
+    public ResponseEntity<Comment> addComment(@PathVariable int id, @RequestBody CreateComment comment,
+                                              Authentication authentication) {
+        return ResponseEntity.ok(commentService.add(id, comment, authentication.getName()));
     }
 
     @DeleteMapping("/{adId}/comments/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable int adId, @PathVariable int commentId) {
+        commentService.delete(commentId);
         return ResponseEntity.ok().build();
     }
 
