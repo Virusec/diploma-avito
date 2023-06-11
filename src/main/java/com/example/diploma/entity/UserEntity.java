@@ -1,11 +1,15 @@
 package com.example.diploma.entity;
 
+import com.example.diploma.dto.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+ * @author anna
+ */
 @Entity
 @Table(name = "users")
 @Data
@@ -23,5 +27,12 @@ public class UserEntity {
     @Column(name = "last_name")
     private String lastName;
     private String phone;
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    //TODO: переделать получение пути файла, когда будем делать хранение картинок
+    public String getImagePath() {
+        return "images/1.jpeg";
+    }
+
 }

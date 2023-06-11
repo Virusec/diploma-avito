@@ -5,7 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
+/**
+ * @author anna
+ */
 @Entity
 @Table(name = "comments")
 @Data
@@ -16,10 +20,14 @@ public class CommentEntity {
     @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pk;
-    @Column(name = "user_id")
-    private int author;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity author;
     @Column(name = "created_at")
-    private long createdAt;
+    private LocalDateTime createdAt;
     @Column(name = "comments_text")
     private String text;
+    @ManyToOne
+    @JoinColumn(name = "ad_id")
+    private AdEntity adId;
 }
