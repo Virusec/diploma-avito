@@ -30,9 +30,18 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    public UserEntity(String password, String email, String firstName, String lastName, String phone, Role role) {
+        this.password = password;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.role = role;
+    }
+
     //TODO: переделать получение пути файла, когда будем делать хранение картинок
     public String getImagePath() {
-        return "images/1.jpeg";
+        return "users-images/1.jpeg";
     }
 
 }
