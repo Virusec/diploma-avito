@@ -35,7 +35,7 @@ public class AdEntity {
 
     //TODO: переделать получение пути файла, когда будем делать хранение картинок
     public String getImagePath() {
-        return "ads-images/1.jpeg";
+        return null;
     }
 
 }

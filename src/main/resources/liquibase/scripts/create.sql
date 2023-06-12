@@ -25,8 +25,10 @@ create table ads
 create table comments
 (
     comment_id     serial primary key,
-    user_id        int not null references users(user_id),
-    created_at     timestamptz not null ,
+    user_id        int not null references users(user_id) on delete cascade,
+    created_at     timestamp not null ,
     comments_text  text,
-    ad_id int not null references ads (ad_id)
+    ad_id int not null references ads (ad_id) on delete cascade
 );
+
+

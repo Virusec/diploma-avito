@@ -41,7 +41,7 @@ public class UserEntity {
 
     //TODO: переделать получение пути файла, когда будем делать хранение картинок
     public String getImagePath() {
-        return "users-images/1.jpeg";
+        return null;
     }
 
 }

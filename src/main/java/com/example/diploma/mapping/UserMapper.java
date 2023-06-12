@@ -15,7 +15,7 @@ public class UserMapper {
         return new User(entity.getId(), entity.getEmail(), entity.getFirstName(),
                 entity.getLastName(), entity.getPhone(), entity.getImagePath());
     }
-//из Authentication берем name, по нему ищем UserEntity и передаем сюда
+
     public UserEntity userDtoToEntity(User user, UserEntity entity) {
         entity.setPhone(user.getPhone());
         entity.setFirstName(user.getFirstName());
