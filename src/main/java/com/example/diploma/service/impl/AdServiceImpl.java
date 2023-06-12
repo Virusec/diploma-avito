@@ -37,7 +37,8 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public FullAds getFullAdsById(int id) {
-        return mapper.entityToFullAdsDto(adRepository.findById(id).get());
+        return mapper.entityToFullAdsDto(adRepository.findById(id)
+                .orElseThrow(RuntimeException::new));
     }
 
     @Override

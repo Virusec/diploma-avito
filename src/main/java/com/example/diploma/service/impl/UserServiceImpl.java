@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(User user, String name) {
-        UserEntity entity = userRepository.findByEmail(name);
+        UserEntity entity = userRepository.findByEmail(name).orElseThrow(RuntimeException::new);
         return mapper.entityToUserDto(userRepository.save(mapper.userDtoToEntity(user, entity)));
     }
 
@@ -45,6 +45,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getEntity(String name) {
-        return userRepository.findByEmail(name);
+        return userRepository.findByEmail(name).orElseThrow(RuntimeException::new);
     }
 }
