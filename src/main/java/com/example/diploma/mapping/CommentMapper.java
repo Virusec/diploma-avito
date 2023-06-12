@@ -27,7 +27,7 @@ public class CommentMapper {
     }
 
     private long getMillis(LocalDateTime time) {
-        return time.toInstant(ZoneOffset.ofHours(0)).toEpochMilli();
+        return time.toInstant(ZoneOffset.ofHours(5)).toEpochMilli();
     }
 
 }

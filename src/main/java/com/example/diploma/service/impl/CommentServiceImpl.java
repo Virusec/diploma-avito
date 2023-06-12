@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,7 +48,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment update(int adId, int commentId, Comment newComment) {
-        return null;
+    public Comment update(int commentId, Comment comment, String email) {
+        CommentEntity entity = commentRepository.findById(commentId).orElseThrow(RuntimeException::new);
+        entity.setText(comment.getText() + "(отредактировал(а) " + userService.getEntity(email).getFirstName() +
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(" dd MMMM yyyy в HH:mm:ss)")));
+        return mapper.entityToCommentDto(commentRepository.save(entity));
     }
 }
