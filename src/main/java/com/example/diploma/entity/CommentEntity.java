@@ -27,10 +27,11 @@ public class CommentEntity {
     private LocalDateTime createdAt;
     @Column(name = "comments_text")
     private String text;
-    @Column(name = "ad_id")
-    private int ad;
+    @ManyToOne
+    @JoinColumn(name = "ad_id")
+    private AdEntity ad;
 
-    public CommentEntity(UserEntity author, LocalDateTime createdAt, String text, int ad) {
+    public CommentEntity(UserEntity author, LocalDateTime createdAt, String text, AdEntity ad) {
         this.author = author;
         this.createdAt = createdAt;
         this.text = text;

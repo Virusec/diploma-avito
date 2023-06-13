@@ -11,5 +11,5 @@ import java.util.List;
  */
 @Repository
 public interface CommentRepository extends JpaRepository<CommentEntity, Integer> {
-    List<CommentEntity> findAllByAd(int id);
+    List<CommentEntity> findAllByAd_Pk(int id);
 }

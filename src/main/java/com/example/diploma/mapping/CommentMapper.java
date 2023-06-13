@@ -2,6 +2,7 @@ package com.example.diploma.mapping;
 
 import com.example.diploma.dto.Comment;
 import com.example.diploma.dto.CreateComment;
+import com.example.diploma.entity.AdEntity;
 import com.example.diploma.entity.CommentEntity;
 import com.example.diploma.entity.UserEntity;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ public class CommentMapper {
 
     //из Authentication берем name, по нему ищем UserEntity и передаем сюда
     //AdEntity ищем по id
-    public CommentEntity createCommentToEntity(CreateComment createComment, int ad, UserEntity author) {
+    public CommentEntity createCommentToEntity(CreateComment createComment, AdEntity ad, UserEntity author) {
         return new CommentEntity(author, LocalDateTime.now(), createComment.getText(), ad);
     }
 
