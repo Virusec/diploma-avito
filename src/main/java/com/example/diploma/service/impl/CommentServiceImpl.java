@@ -6,6 +6,7 @@ import com.example.diploma.dto.ResponseWrapperComment;
 import com.example.diploma.entity.CommentEntity;
 import com.example.diploma.mapping.CommentMapper;
 import com.example.diploma.repository.CommentRepository;
+import com.example.diploma.service.AdService;
 import com.example.diploma.service.CommentService;
 import com.example.diploma.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,19 +27,20 @@ import java.util.List;
 @Service
 public class CommentServiceImpl implements CommentService {
     private final UserService userService;
+    private final AdService adService;
     private final CommentRepository commentRepository;
     private final CommentMapper mapper;
 
     @Override
     public ResponseWrapperComment getComments(int id) {
         List<Comment> result = new LinkedList<>();
-        commentRepository.findAllByAd(id).forEach(entity -> result.add(mapper.entityToCommentDto(entity)));
+        commentRepository.findAllByAd_Pk(id).forEach(entity -> result.add(mapper.entityToCommentDto(entity)));
         return new ResponseWrapperComment(result.size(), result);
     }
 
     @Override
     public Comment add(int id, CreateComment comment, String name) {
-        CommentEntity entity = mapper.createCommentToEntity(comment, id, userService.getEntity(name));
+        CommentEntity entity = mapper.createCommentToEntity(comment, adService.getEntity(id), userService.getEntity(name));
         return mapper.entityToCommentDto(commentRepository.save(entity));
     }
 

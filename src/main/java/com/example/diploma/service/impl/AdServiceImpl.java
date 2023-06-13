@@ -57,6 +57,12 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    public AdEntity getEntity(int id) {
+        return adRepository.findById(id).orElseThrow(RuntimeException::new);
+    }
+
+
+    @Override
     public ResponseWrapperAds getAllAds() {
         return getWrapper(adRepository.findAll());
     }
