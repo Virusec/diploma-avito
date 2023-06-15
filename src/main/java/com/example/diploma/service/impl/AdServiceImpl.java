@@ -5,6 +5,7 @@ import com.example.diploma.dto.CreateAds;
 import com.example.diploma.dto.FullAds;
 import com.example.diploma.dto.ResponseWrapperAds;
 import com.example.diploma.entity.AdEntity;
+import com.example.diploma.exception.FindNoEntityException;
 import com.example.diploma.mapping.AdMapper;
 import com.example.diploma.repository.AdRepository;
 import com.example.diploma.service.AdService;
@@ -32,33 +33,35 @@ public class AdServiceImpl implements AdService {
     @Override
     public Ads add(CreateAds properties, MultipartFile image, String email) {
         AdEntity ad = mapper.createAdsToEntity(properties, userService.getEntity(email));
+        log.info("Добавление нового объявления");
         return mapper.entityToAdsDto(adRepository.save(ad));
     }
 
     @Override
     public FullAds getFullAdsById(int id) {
-        return mapper.entityToFullAdsDto(adRepository.findById(id)
-                .orElseThrow(RuntimeException::new));
+        return mapper.entityToFullAdsDto(getEntity(id));
     }
 
     @Override
     public void delete(int id) {
         adRepository.deleteById(id);
+        log.info("Удаление объявления с id " + id);
     }
 
     @Override
     public Ads update(int id, CreateAds ads) {
-        AdEntity entity = adRepository.findById(id).orElseThrow(RuntimeException::new);
+        AdEntity entity = getEntity(id);
         entity.setTitle(ads.getTitle());
         entity.setDescription(ads.getDescription());
         entity.setPrice(ads.getPrice());
         adRepository.save(entity);
+        log.info("Редактирование объявления с id " + id);
         return mapper.entityToAdsDto(entity);
     }
 
     @Override
     public AdEntity getEntity(int id) {
-        return adRepository.findById(id).orElseThrow(RuntimeException::new);
+        return adRepository.findById(id).orElseThrow(() -> new FindNoEntityException("объявление"));
     }
 
 
