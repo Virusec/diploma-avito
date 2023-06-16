@@ -4,6 +4,7 @@ import com.example.diploma.dto.Comment;
 import com.example.diploma.dto.CreateComment;
 import com.example.diploma.dto.ResponseWrapperComment;
 import com.example.diploma.entity.CommentEntity;
+import com.example.diploma.exception.FindNoEntityException;
 import com.example.diploma.mapping.CommentMapper;
 import com.example.diploma.repository.CommentRepository;
 import com.example.diploma.service.AdService;
@@ -41,19 +42,23 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment add(int id, CreateComment comment, String name) {
         CommentEntity entity = mapper.createCommentToEntity(comment, adService.getEntity(id), userService.getEntity(name));
+        log.info("Добавление комментария к объявлению с id " + id);
         return mapper.entityToCommentDto(commentRepository.save(entity));
     }
 
     @Override
     public void delete(int commentId) {
         commentRepository.deleteById(commentId);
+        log.info("Удаление комментария с id " + commentId);
     }
 
     @Override
     public Comment update(int commentId, Comment comment, String email) {
-        CommentEntity entity = commentRepository.findById(commentId).orElseThrow(RuntimeException::new);
+        CommentEntity entity = commentRepository.findById(commentId)
+                .orElseThrow(() -> new FindNoEntityException("комментарий"));
         entity.setText(comment.getText() + "(отредактировал(а) " + userService.getEntity(email).getFirstName() +
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern(" dd MMMM yyyy в HH:mm:ss)")));
+        log.info("Редактирование комментраия с id " + commentId);
         return mapper.entityToCommentDto(commentRepository.save(entity));
     }
 }
