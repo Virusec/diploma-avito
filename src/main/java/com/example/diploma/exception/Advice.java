@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class Advice {
     @ExceptionHandler(FindNoEntityException.class)
     public void handleException(FindNoEntityException e) {
-        log.warn("Обращение к несуществующей записи:" + e.getMessage());
+        log.warn("Обращение к несуществующей записи: " + e.getMessage());
     }
 }

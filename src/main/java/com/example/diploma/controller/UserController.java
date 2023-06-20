@@ -2,9 +2,11 @@ package com.example.diploma.controller;
 
 import com.example.diploma.dto.NewPassword;
 import com.example.diploma.dto.User;
+import com.example.diploma.service.AuthService;
 import com.example.diploma.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,10 +23,16 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+    private final AuthService authService;
 
     @PostMapping("/set_password")
-    public ResponseEntity<?> setPassword(@RequestBody NewPassword newPassword) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> setPassword(@RequestBody NewPassword newPassword,
+                                         Authentication authentication) {
+        if (authService.setPassword(newPassword, authentication.getName())) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @GetMapping("/me")

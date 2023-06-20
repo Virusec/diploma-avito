@@ -1,6 +1,5 @@
 package com.example.diploma.service.impl;
 
-import com.example.diploma.dto.RegisterReq;
 import com.example.diploma.dto.User;
 import com.example.diploma.entity.UserEntity;
 import com.example.diploma.exception.FindNoEntityException;
@@ -22,12 +21,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     //TODO: ImageService
     private final UserMapper mapper;
-
-    @Override
-    public User add(RegisterReq req) {
-        log.info("Регистрация нового пользователя");
-        return mapper.entityToUserDto(userRepository.save(mapper.registerReqDtoToEntity(req)));
-    }
 
     @Override
     public User update(User user, String name) {
