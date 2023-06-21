@@ -3,6 +3,7 @@ package com.example.diploma.service;
 import com.example.diploma.dto.Comment;
 import com.example.diploma.dto.CreateComment;
 import com.example.diploma.dto.ResponseWrapperComment;
+import com.example.diploma.entity.CommentEntity;
 
 /**
  * @author anna
@@ -15,4 +16,6 @@ public interface CommentService {
     void delete(int commentId);
 
     Comment update(int commentId, Comment newComment, String email);
+
+    CommentEntity getEntity(int commentId);
 }
