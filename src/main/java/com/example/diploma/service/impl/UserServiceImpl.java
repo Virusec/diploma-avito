@@ -3,6 +3,7 @@ package com.example.diploma.service.impl;
 import com.example.diploma.dto.RegisterReq;
 import com.example.diploma.dto.User;
 import com.example.diploma.entity.UserEntity;
+import com.example.diploma.exception.FindNoEntityException;
 import com.example.diploma.mapping.UserMapper;
 import com.example.diploma.repository.UserRepository;
 import com.example.diploma.service.UserService;
@@ -24,18 +25,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User add(RegisterReq req) {
+        log.info("Регистрация нового пользователя");
         return mapper.entityToUserDto(userRepository.save(mapper.registerReqDtoToEntity(req)));
     }
 
     @Override
     public User update(User user, String name) {
-        UserEntity entity = userRepository.findByEmail(name).orElseThrow(RuntimeException::new);
-        return mapper.entityToUserDto(userRepository.save(mapper.userDtoToEntity(user, entity)));
+        log.info("Изменение данных профиля пользователя " + name);
+        return mapper.entityToUserDto(userRepository.save(mapper.userDtoToEntity(user, getEntity(name))));
     }
 
     @Override
     public void delete(String name) {
         userRepository.deleteByEmail(name);
+        log.info("Удаление пользователя " + name);
     }
 
     @Override
@@ -45,6 +48,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getEntity(String name) {
-        return userRepository.findByEmail(name).orElseThrow(RuntimeException::new);
+        return userRepository.findByEmail(name).orElseThrow(() -> new FindNoEntityException("пользователь"));
     }
 }
