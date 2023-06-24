@@ -7,6 +7,7 @@ import com.example.diploma.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,14 +34,18 @@ public class CommentController {
     }
 
     @DeleteMapping("/{adId}/comments/{commentId}")
-    public ResponseEntity<?> deleteComment(@PathVariable int adId, @PathVariable int commentId) {
+    @PreAuthorize("@commentServiceImpl.getEntity(#commentId).author.email.equals(#auth.name) " +
+            "or hasAuthority('DELETE_ANY_COMMENT')")
+    public ResponseEntity<?> deleteComment(@PathVariable int adId, @PathVariable int commentId, Authentication auth) {
         commentService.delete(commentId);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{adId}/comments/{commentId}")
+    @PreAuthorize("@commentServiceImpl.getEntity(#commentId).author.email.equals(#auth.name) " +
+            "or hasAuthority('UPDATE_ANY_COMMENT')")
     public ResponseEntity<Comment> updateComment(@PathVariable int commentId, @RequestBody Comment newComment,
-                                                 Authentication authentication, @PathVariable String adId) {
-        return ResponseEntity.ok(commentService.update(commentId, newComment, authentication.getName()));
+                                                 Authentication auth, @PathVariable String adId) {
+        return ResponseEntity.ok(commentService.update(commentId, newComment, auth.getName()));
     }
 }
