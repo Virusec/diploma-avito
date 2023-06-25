@@ -3,6 +3,7 @@ package com.example.diploma.service.impl;
 import com.example.diploma.dto.NewPassword;
 import com.example.diploma.dto.RegisterReq;
 import com.example.diploma.dto.Role;
+import com.example.diploma.dto.UserSecurity;
 import com.example.diploma.mapping.UserMapper;
 import com.example.diploma.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
         }
         registerReq.setRole(role);
         registerReq.setPassword(encoder.encode(registerReq.getPassword()));
-        manager.createUser(mapper.registerReqDtoToEntity(registerReq));
+        manager.createUser(new UserSecurity(mapper.registerReqDtoToEntity(registerReq)));
         return true;
     }
 

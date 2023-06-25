@@ -1,5 +1,6 @@
 package com.example.diploma.service.impl;
 
+import com.example.diploma.dto.UserSecurity;
 import com.example.diploma.entity.UserEntity;
 import com.example.diploma.exception.FindNoEntityException;
 import com.example.diploma.repository.UserRepository;
@@ -37,13 +38,14 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        return repository.findByEmail(username).orElseThrow(() -> new FindNoEntityException("пользователь"));
+        return new UserSecurity(repository.findByEmail(username)
+                .orElseThrow(() -> new FindNoEntityException("пользователь")));
     }
 
     @Override
     public void createUser(UserDetails user) {
         log.info("Регистрация нового пользователя");
-        repository.save((UserEntity) user);
+        repository.save(((UserSecurity)user).getEntity());
     }
 
     @Override
