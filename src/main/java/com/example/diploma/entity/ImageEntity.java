@@ -24,4 +24,9 @@ public class ImageEntity {
     private long fileSize;
     @Column(name = "media_type")
     private String mediaType;
+
+    public ImageEntity(long fileSize, String mediaType) {
+        this.fileSize = fileSize;
+        this.mediaType = mediaType;
+    }
 }

@@ -7,11 +7,13 @@ import com.example.diploma.dto.ResponseWrapperAds;
 import com.example.diploma.entity.AdEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 /**
  * @author anna
  */
 public interface AdService {
-    Ads add(CreateAds properties, MultipartFile image, String email);
+    Ads add(CreateAds properties, MultipartFile image, String email) throws IOException;
 
     FullAds getFullAdsById(int id);
 
@@ -24,4 +26,6 @@ public interface AdService {
     Ads update(int id, CreateAds ads);
 
     AdEntity getEntity(int id);
+
+    void uploadImage(int id, MultipartFile image) throws IOException;
 }

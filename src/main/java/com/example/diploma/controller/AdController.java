@@ -15,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 
 /**
  * @author anna
@@ -35,7 +37,7 @@ public class AdController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Ads> addAd(@RequestPart CreateAds properties, @RequestPart MultipartFile image,
-                                     Authentication auth) {
+                                     Authentication auth) throws IOException {
         return ResponseEntity.ok(adService.add(properties, image, auth.getName()));
     }
 
@@ -62,9 +64,9 @@ public class AdController {
         return ResponseEntity.ok(adService.getAllMyAds(auth.getName()));
     }
 
-    //TODO: доделать
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateImage(@PathVariable int id, @RequestPart MultipartFile image) {
+    public ResponseEntity<?> updateImage(@PathVariable int id, @RequestPart MultipartFile image) throws IOException {
+        adService.uploadImage(id, image);
         return ResponseEntity.ok().build();
     }
 
