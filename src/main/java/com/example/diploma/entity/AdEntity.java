@@ -25,6 +25,9 @@ public class AdEntity {
     private String title;
     private int price;
     private String description;
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private ImageEntity image;
 
     public AdEntity(UserEntity author, String title, int price, String description) {
         this.author = author;

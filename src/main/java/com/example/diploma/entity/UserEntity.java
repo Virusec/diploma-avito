@@ -29,6 +29,9 @@ public class UserEntity {
     private String phone;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private ImageEntity image;
 
     public UserEntity(String password, String email, String firstName, String lastName, String phone, Role role) {
         this.password = password;
