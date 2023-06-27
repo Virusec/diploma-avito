@@ -54,11 +54,16 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment update(int commentId, Comment comment, String email) {
-        CommentEntity entity = commentRepository.findById(commentId)
-                .orElseThrow(() -> new FindNoEntityException("комментарий"));
+        CommentEntity entity = getEntity(commentId);
         entity.setText(comment.getText() + "(отредактировал(а) " + userService.getEntity(email).getFirstName() +
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern(" dd MMMM yyyy в HH:mm:ss)")));
         log.info("Редактирование комментраия с id " + commentId);
         return mapper.entityToCommentDto(commentRepository.save(entity));
+    }
+
+    @Override
+    public CommentEntity getEntity(int commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new FindNoEntityException("комментарий"));
     }
 }

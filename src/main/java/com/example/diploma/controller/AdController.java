@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,8 +35,8 @@ public class AdController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Ads> addAd(@RequestPart CreateAds properties, @RequestPart MultipartFile image,
-                                     Authentication authentication) {
-        return ResponseEntity.ok(adService.add(properties, image, authentication.getName()));
+                                     Authentication auth) {
+        return ResponseEntity.ok(adService.add(properties, image, auth.getName()));
     }
 
     @GetMapping("/{id}")
@@ -44,19 +45,21 @@ public class AdController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> removeAd(@PathVariable int id) {
+    @PreAuthorize("@adServiceImpl.getEntity(#id).author.email.equals(#auth.name) or hasAuthority('DELETE_ANY_AD')")
+    public ResponseEntity<?> removeAd(@PathVariable int id, Authentication auth) {
         adService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Ads> updateAds(@PathVariable int id, @RequestBody CreateAds ads) {
+    @PreAuthorize("@adServiceImpl.getEntity(#id).author.email.equals(#auth.name) or hasAuthority('UPDATE_ANY_AD')")
+    public ResponseEntity<Ads> updateAds(@PathVariable int id, @RequestBody CreateAds ads, Authentication auth) {
         return ResponseEntity.ok(adService.update(id, ads));
     }
 
     @GetMapping("/me")
-    public ResponseEntity<ResponseWrapperAds> getAdsMe(Authentication authentication) {
-        return ResponseEntity.ok(adService.getAllMyAds(authentication.getName()));
+    public ResponseEntity<ResponseWrapperAds> getAdsMe(Authentication auth) {
+        return ResponseEntity.ok(adService.getAllMyAds(auth.getName()));
     }
 
     //TODO: доделать

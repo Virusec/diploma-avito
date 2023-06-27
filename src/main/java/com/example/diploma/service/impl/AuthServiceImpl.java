@@ -1,9 +1,12 @@
 package com.example.diploma.service.impl;
 
+import com.example.diploma.dto.NewPassword;
 import com.example.diploma.dto.RegisterReq;
 import com.example.diploma.dto.Role;
+import com.example.diploma.dto.UserSecurity;
+import com.example.diploma.mapping.UserMapper;
 import com.example.diploma.service.AuthService;
-import org.springframework.security.core.userdetails.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -12,17 +15,13 @@ import org.springframework.stereotype.Service;
 /**
  * @author Anatoliy Shikin
  */
+
+@RequiredArgsConstructor
 @Service
 public class AuthServiceImpl implements AuthService {
-
     private final UserDetailsManager manager;
-
     private final PasswordEncoder encoder;
-
-    public AuthServiceImpl(UserDetailsManager manager, PasswordEncoder passwordEncoder) {
-        this.manager = manager;
-        this.encoder = passwordEncoder;
-    }
+    private final UserMapper mapper;
 
     @Override
     public boolean login(String userName, String password) {
@@ -38,13 +37,18 @@ public class AuthServiceImpl implements AuthService {
         if (manager.userExists(registerReq.getUsername())) {
             return false;
         }
-        manager.createUser(
-                User.builder()
-                        .passwordEncoder(this.encoder::encode)
-                        .password(registerReq.getPassword())
-                        .username(registerReq.getUsername())
-                        .roles(role.name())
-                        .build());
+        registerReq.setRole(role);
+        registerReq.setPassword(encoder.encode(registerReq.getPassword()));
+        manager.createUser(new UserSecurity(mapper.registerReqDtoToEntity(registerReq)));
         return true;
+    }
+
+    @Override
+    public boolean setPassword(NewPassword newPassword, String name) {
+        if (encoder.matches(newPassword.getCurrentPassword(), manager.loadUserByUsername(name).getPassword())) {
+            manager.changePassword(newPassword.getCurrentPassword(), encoder.encode(newPassword.getNewPassword()));
+            return true;
+        }
+        return false;
     }
 }
