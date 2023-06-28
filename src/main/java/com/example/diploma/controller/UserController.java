@@ -3,6 +3,7 @@ package com.example.diploma.controller;
 import com.example.diploma.dto.NewPassword;
 import com.example.diploma.dto.User;
 import com.example.diploma.service.AuthService;
+import com.example.diploma.service.ImageService;
 import com.example.diploma.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ import java.io.IOException;
 public class UserController {
     private final UserService userService;
     private final AuthService authService;
+    private final ImageService imageService;
 
     @PostMapping("/set_password")
     public ResponseEntity<?> setPassword(@RequestBody NewPassword newPassword,
@@ -39,7 +41,7 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<User> getUser(Authentication authentication) {
-        return ResponseEntity.ok(userService.get(authentication.getName()));
+        return ResponseEntity.ok( userService.get(authentication.getName()));
     }
 
     @PatchMapping("/me")
@@ -51,5 +53,11 @@ public class UserController {
     public ResponseEntity<?> updateUserImage(@RequestPart MultipartFile image, Authentication auth) throws IOException {
         userService.uploadImage(image, auth.getName());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> getImage(@PathVariable String id) throws IOException {
+        long imageId = userService.getEntityById(Integer.parseInt(id)).getImage().getId();
+        return ResponseEntity.ok(imageService.getImage(imageId));
     }
 }

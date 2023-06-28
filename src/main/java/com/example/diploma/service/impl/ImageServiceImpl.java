@@ -1,6 +1,7 @@
 package com.example.diploma.service.impl;
 
 import com.example.diploma.entity.ImageEntity;
+import com.example.diploma.exception.FindNoEntityException;
 import com.example.diploma.repository.ImageRepository;
 import com.example.diploma.service.ImageService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -31,8 +31,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ImageEntity saveImage(MultipartFile image) throws IOException {
         ImageEntity entity = repository.save(new ImageEntity(image.getSize(), image.getContentType()));
-        Path filePath = Path.of(imageDirectory, entity.getId() + "." +
-                getExtensions(Objects.requireNonNull(image.getOriginalFilename()), '.'));
+        Path filePath = getPath(entity);
         Files.createDirectories(filePath.getParent());
         try (
                 InputStream is = image.getInputStream();
@@ -45,18 +44,24 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public byte[] getImage(long id) {
-        return new byte[0];
+    public byte[] getImage(long id) throws IOException {
+        return Files.readAllBytes(getPath(getEntity(id)));
     }
 
     @Override
-    public void deleteImage(ImageEntity entity) throws IOException {
-        String type = entity.getMediaType();
-        Files.deleteIfExists(Path.of(imageDirectory, entity.getId() + "." + getExtensions(type, '/')));
-        repository.delete(entity);
+    public ImageEntity getEntity(long id) {
+        return repository.findById(id).orElseThrow(() -> new FindNoEntityException("картинка"));
     }
 
-    private String getExtensions(String s, char delimiter) {
-        return s.substring(s.lastIndexOf(delimiter) + 1);
+    @Override
+    public void deleteImage(ImageEntity image) throws IOException {
+        Files.deleteIfExists(getPath(image));
+        repository.delete(image);
+    }
+
+    private Path getPath(ImageEntity image) {
+        String type = image.getMediaType();
+        return Path.of(imageDirectory, image.getId() + "."
+                + type.substring(type.lastIndexOf('/') + 1));
     }
 }

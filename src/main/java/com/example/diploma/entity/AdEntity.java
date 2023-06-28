@@ -36,9 +36,8 @@ public class AdEntity {
         this.description = description;
     }
 
-    //TODO: переделать получение пути файла, когда будем делать хранение картинок
     public String getImagePath() {
-        return null;
+        return image == null ? null : "/ads/" + pk + "/image";
     }
 
 }

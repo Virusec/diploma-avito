@@ -59,4 +59,9 @@ public class UserServiceImpl implements UserService {
             imageService.deleteImage(imageEntity);
         }
     }
+
+    @Override
+    public UserEntity getEntityById(int id) {
+        return userRepository.findById(id).orElseThrow(() -> new FindNoEntityException("пользователь"));
+    }
 }

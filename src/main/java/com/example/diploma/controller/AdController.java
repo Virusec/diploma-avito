@@ -4,9 +4,12 @@ import com.example.diploma.dto.Ads;
 import com.example.diploma.dto.CreateAds;
 import com.example.diploma.dto.FullAds;
 import com.example.diploma.dto.ResponseWrapperAds;
+import com.example.diploma.entity.ImageEntity;
 import com.example.diploma.service.AdService;
+import com.example.diploma.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +32,8 @@ import java.io.IOException;
 
 public class AdController {
     private final AdService adService;
+    private final ImageService imageService;
+
 
     @GetMapping
     public ResponseEntity<ResponseWrapperAds> getAllAds() {
@@ -70,4 +75,13 @@ public class AdController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> getImage(@PathVariable String id) throws IOException {
+        long imageId = adService.getEntity(Integer.parseInt(id)).getImage().getId();
+        ImageEntity image = imageService.getEntity(imageId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.valueOf(image.getMediaType()));
+        headers.setContentLength(image.getFileSize());
+        return ResponseEntity.ok().headers(headers).body(imageService.getImage(imageId));
+    }
 }
