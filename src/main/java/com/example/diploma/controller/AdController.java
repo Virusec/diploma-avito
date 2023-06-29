@@ -4,9 +4,12 @@ import com.example.diploma.dto.Ads;
 import com.example.diploma.dto.CreateAds;
 import com.example.diploma.dto.FullAds;
 import com.example.diploma.dto.ResponseWrapperAds;
+import com.example.diploma.entity.ImageEntity;
 import com.example.diploma.service.AdService;
+import com.example.diploma.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 
 /**
@@ -27,6 +32,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class AdController {
     private final AdService adService;
+    private final ImageService imageService;
+
 
     @GetMapping
     public ResponseEntity<ResponseWrapperAds> getAllAds() {
@@ -35,7 +42,7 @@ public class AdController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Ads> addAd(@RequestPart CreateAds properties, @RequestPart MultipartFile image,
-                                     Authentication auth) {
+                                     Authentication auth) throws IOException {
         return ResponseEntity.ok(adService.add(properties, image, auth.getName()));
     }
 
@@ -62,10 +69,19 @@ public class AdController {
         return ResponseEntity.ok(adService.getAllMyAds(auth.getName()));
     }
 
-    //TODO: доделать
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateImage(@PathVariable int id, @RequestPart MultipartFile image) {
+    public ResponseEntity<?> updateImage(@PathVariable int id, @RequestPart MultipartFile image) throws IOException {
+        adService.uploadImage(id, image);
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/image/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable int id) throws IOException {
+        long imageId = adService.getEntity(id).getImage().getId();
+        ImageEntity image = imageService.getEntity(imageId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.valueOf(image.getMediaType()));
+        headers.setContentLength(image.getFileSize());
+        return ResponseEntity.ok().headers(headers).body(imageService.getImage(imageId));
+    }
 }

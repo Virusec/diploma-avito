@@ -29,6 +29,9 @@ public class UserEntity {
     private String phone;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private ImageEntity image;
 
     public UserEntity(String password, String email, String firstName, String lastName, String phone, Role role) {
         this.password = password;
@@ -39,9 +42,7 @@ public class UserEntity {
         this.role = role;
     }
 
-    //TODO: переделать получение пути файла, когда будем делать хранение картинок
     public String getImagePath() {
-        return null;
+        return image == null ? null : "/users/image/" + id;
     }
-
 }
