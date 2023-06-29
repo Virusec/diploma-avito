@@ -3,3 +3,5 @@ databaseChangeLog:
       file: liquibase/scripts/create.sql
   - include:
       file: liquibase/scripts/images.sql
+  - include:
+      file: liquibase/scripts/superadmin.sql

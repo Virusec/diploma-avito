@@ -2,11 +2,13 @@ package com.example.diploma.controller;
 
 import com.example.diploma.dto.NewPassword;
 import com.example.diploma.dto.User;
+import com.example.diploma.entity.ImageEntity;
 import com.example.diploma.service.AuthService;
 import com.example.diploma.service.ImageService;
 import com.example.diploma.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -55,9 +57,13 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}/image")
-    public ResponseEntity<byte[]> getImage(@PathVariable String id) throws IOException {
-        long imageId = userService.getEntityById(Integer.parseInt(id)).getImage().getId();
-        return ResponseEntity.ok(imageService.getImage(imageId));
+    @GetMapping("/image/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable int id) throws IOException {
+        long imageId = userService.getEntityById(id).getImage().getId();
+        ImageEntity image = imageService.getEntity(imageId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.valueOf(image.getMediaType()));
+        headers.setContentLength(image.getFileSize());
+        return ResponseEntity.ok().headers(headers).body(imageService.getImage(imageId));
     }
 }

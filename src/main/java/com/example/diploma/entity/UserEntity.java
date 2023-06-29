@@ -43,6 +43,6 @@ public class UserEntity {
     }
 
     public String getImagePath() {
-        return image == null ? null : "/users/" + id + "/image";
+        return image == null ? null : "/users/image/" + id;
     }
 }

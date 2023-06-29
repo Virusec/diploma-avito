@@ -75,9 +75,9 @@ public class AdController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}/image")
-    public ResponseEntity<byte[]> getImage(@PathVariable String id) throws IOException {
-        long imageId = adService.getEntity(Integer.parseInt(id)).getImage().getId();
+    @GetMapping("/image/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable int id) throws IOException {
+        long imageId = adService.getEntity(id).getImage().getId();
         ImageEntity image = imageService.getEntity(imageId);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.valueOf(image.getMediaType()));

@@ -37,7 +37,7 @@ public class AdEntity {
     }
 
     public String getImagePath() {
-        return image == null ? null : "/ads/" + pk + "/image";
+        return image == null ? null : "/ads/image/" + pk;
     }
 
 }
