@@ -94,7 +94,7 @@ class AuthServiceImplTest {
         when(manager.loadUserByUsername(userName)).thenReturn(user);
         when(encoder.encode(renewedPassword)).thenReturn(newEncodePass);
         Assertions.assertTrue(authService.setPassword(newPassword, userName));
-        verify(manager).changePassword(newEncodePass);
+        verify(manager).changePassword(newEncodePass, userName);
     }
 
     @Test

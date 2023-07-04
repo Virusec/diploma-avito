@@ -5,8 +5,6 @@ import com.example.diploma.entity.UserEntity;
 import com.example.diploma.exception.FindNoEntityException;
 import com.example.diploma.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
@@ -21,9 +19,8 @@ public class UserDetailsManagerImpl implements UserDetailsService {
 
     private final UserRepository repository;
 
-    public void changePassword(String newPassword) {
-        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-        UserEntity entity = getEntity(currentUser.getName());
+    public void changePassword(String newPassword, String name) {
+        UserEntity entity = getEntity(name);
         entity.setPassword(newPassword);
         repository.save(entity);
     }
