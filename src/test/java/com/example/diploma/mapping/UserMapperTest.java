@@ -8,6 +8,10 @@ import com.example.diploma.entity.UserEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+/**
+ * @author anna
+ */
+
 class UserMapperTest {
 
     private final UserMapper mapper = new UserMapper();
@@ -34,7 +38,7 @@ class UserMapperTest {
     @Test
     void entityToUserDtoTestWithImage() {
         UserEntity entity = new UserEntity(id, password, email, fName, lName, phone, role,
-                new ImageEntity(1, 123456, "mediaType"));
+                new ImageEntity(1));
         User user = mapper.entityToUserDto(entity);
         assert user.getId() == id;
         assert user.getEmail().equals(email);

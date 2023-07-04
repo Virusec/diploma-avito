@@ -20,13 +20,4 @@ public class ImageEntity {
     @Column(name = "image_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name = "size")
-    private long fileSize;
-    @Column(name = "media_type")
-    private String mediaType;
-
-    public ImageEntity(long fileSize, String mediaType) {
-        this.fileSize = fileSize;
-        this.mediaType = mediaType;
-    }
 }

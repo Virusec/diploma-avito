@@ -21,7 +21,7 @@ public interface AdService {
 
     ResponseWrapperAds getAllMyAds(String name);
 
-    void delete(int id);
+    void delete(int id) throws IOException;
 
     Ads update(int id, CreateAds ads);
 

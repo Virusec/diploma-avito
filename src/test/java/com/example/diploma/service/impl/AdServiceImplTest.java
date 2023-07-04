@@ -27,6 +27,10 @@ import java.util.Optional;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author anna
+ */
+
 @ExtendWith(MockitoExtension.class)
 class AdServiceImplTest {
     @InjectMocks
@@ -99,9 +103,12 @@ class AdServiceImplTest {
     }
 
     @Test
-    void deleteTest() {
+    void deleteTest() throws IOException {
+        adEntity.setImage(new ImageEntity());
+        when(adRepository.findById(pk)).thenReturn(Optional.of(adEntity));
         adService.delete(pk);
         verify(adRepository).deleteById(pk);
+        verify(imageService).deleteImage(adEntity.getImage());
     }
 
     @Test
@@ -127,9 +134,7 @@ class AdServiceImplTest {
     void uploadImageTest() throws IOException {
         byte[] inputArray = "Test".getBytes();
         MockMultipartFile mockMultipartFile = new MockMultipartFile("fileName", inputArray);
-        long size = 1000L;
-        String mediaType = "mediaType";
-        ImageEntity imageEntity = new ImageEntity(id, size, mediaType);
+        ImageEntity imageEntity = new ImageEntity(id);
         adEntity.setImage(imageEntity);
         when(adRepository.findById(pk)).thenReturn(Optional.of(adEntity));
 

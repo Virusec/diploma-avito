@@ -13,7 +13,6 @@ import com.example.diploma.service.AdService;
 import com.example.diploma.service.ImageService;
 import com.example.diploma.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +24,6 @@ import java.util.List;
  * @author anna
  */
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AdServiceImpl implements AdService {
@@ -38,7 +36,6 @@ public class AdServiceImpl implements AdService {
     public Ads add(CreateAds properties, MultipartFile image, String email) throws IOException {
         AdEntity ad = mapper.createAdsToEntity(properties, userService.getEntity(email));
         ad.setImage(imageService.saveImage(image));
-        log.info("Добавление нового объявления");
         return mapper.entityToAdsDto(adRepository.save(ad));
     }
 
@@ -48,9 +45,10 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(int id) throws IOException {
+        ImageEntity image = getEntity(id).getImage();
         adRepository.deleteById(id);
-        log.info("Удаление объявления с id " + id);
+        imageService.deleteImage(image);
     }
 
     @Override
@@ -60,7 +58,6 @@ public class AdServiceImpl implements AdService {
         entity.setDescription(ads.getDescription());
         entity.setPrice(ads.getPrice());
         adRepository.save(entity);
-        log.info("Редактирование объявления с id " + id);
         return mapper.entityToAdsDto(entity);
     }
 

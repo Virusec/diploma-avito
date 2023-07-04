@@ -4,12 +4,9 @@ import com.example.diploma.dto.Ads;
 import com.example.diploma.dto.CreateAds;
 import com.example.diploma.dto.FullAds;
 import com.example.diploma.dto.ResponseWrapperAds;
-import com.example.diploma.entity.ImageEntity;
 import com.example.diploma.service.AdService;
 import com.example.diploma.service.ImageService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +21,7 @@ import java.io.IOException;
 /**
  * @author anna
  */
-@Slf4j
+
 @CrossOrigin(value = "http://localhost:3000")
 @RequiredArgsConstructor
 @RestController
@@ -53,7 +50,7 @@ public class AdController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("@adServiceImpl.getEntity(#id).author.email.equals(#auth.name) or hasAuthority('DELETE_ANY_AD')")
-    public ResponseEntity<?> removeAd(@PathVariable int id, Authentication auth) {
+    public ResponseEntity<?> removeAd(@PathVariable int id, Authentication auth) throws IOException {
         adService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -78,10 +75,6 @@ public class AdController {
     @GetMapping("/image/{id}")
     public ResponseEntity<byte[]> getImage(@PathVariable int id) throws IOException {
         long imageId = adService.getEntity(id).getImage().getId();
-        ImageEntity image = imageService.getEntity(imageId);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.valueOf(image.getMediaType()));
-        headers.setContentLength(image.getFileSize());
-        return ResponseEntity.ok().headers(headers).body(imageService.getImage(imageId));
+        return ResponseEntity.ok(imageService.getImage(imageId));
     }
 }

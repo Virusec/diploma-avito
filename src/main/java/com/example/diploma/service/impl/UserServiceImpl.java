@@ -9,7 +9,6 @@ import com.example.diploma.repository.UserRepository;
 import com.example.diploma.service.ImageService;
 import com.example.diploma.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +18,6 @@ import java.io.IOException;
  * @author anna
  */
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
@@ -29,14 +27,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(User user, String name) {
-        log.info("Изменение данных профиля пользователя " + name);
         return mapper.entityToUserDto(userRepository.save(mapper.userDtoToEntity(user, getEntity(name))));
     }
 
     @Override
     public void delete(String name) {
         userRepository.deleteByEmail(name);
-        log.info("Удаление пользователя " + name);
     }
 
     @Override

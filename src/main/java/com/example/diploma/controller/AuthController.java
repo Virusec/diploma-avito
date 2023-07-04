@@ -5,7 +5,6 @@ import com.example.diploma.dto.RegisterReq;
 import com.example.diploma.dto.Role;
 import com.example.diploma.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,7 +17,7 @@ import static com.example.diploma.dto.Role.USER;
 /**
  * @author Anatoliy Shikin
  */
-@Slf4j
+
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor

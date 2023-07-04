@@ -5,7 +5,6 @@ import com.example.diploma.entity.UserEntity;
 import com.example.diploma.exception.FindNoEntityException;
 import com.example.diploma.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
  * @author anna
  */
 
-@Slf4j
 @RequiredArgsConstructor
 @Component
 public class UserDetailsManagerImpl implements UserDetailsService {
@@ -45,7 +43,6 @@ public class UserDetailsManagerImpl implements UserDetailsService {
     }
 
     public void createUser(UserEntity user) {
-        log.info("Регистрация нового пользователя");
         repository.save(user);
     }
 }

@@ -10,6 +10,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
 
+/**
+ * @author anna
+ */
+
 class AdMapperTest {
     private final AdMapper mapper = new AdMapper();
     private final int pk = 1;

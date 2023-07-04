@@ -5,7 +5,6 @@ import com.example.diploma.exception.FindNoEntityException;
 import com.example.diploma.repository.ImageRepository;
 import com.example.diploma.service.ImageService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +19,6 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
  * @author anna
  */
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ImageServiceImpl implements ImageService {
@@ -30,7 +28,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public ImageEntity saveImage(MultipartFile image) throws IOException {
-        ImageEntity entity = repository.save(new ImageEntity(image.getSize(), image.getContentType()));
+        ImageEntity entity = repository.save(new ImageEntity());
         Path filePath = getPath(entity);
         Files.createDirectories(filePath.getParent());
         try (
@@ -60,8 +58,6 @@ public class ImageServiceImpl implements ImageService {
     }
 
     private Path getPath(ImageEntity image) {
-        String type = image.getMediaType();
-        return Path.of(imageDirectory, image.getId() + "."
-                + type.substring(type.lastIndexOf('/') + 1));
+        return Path.of(imageDirectory, String.valueOf(image.getId()));
     }
 }

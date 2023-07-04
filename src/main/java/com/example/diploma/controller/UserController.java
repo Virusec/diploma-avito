@@ -2,13 +2,10 @@ package com.example.diploma.controller;
 
 import com.example.diploma.dto.NewPassword;
 import com.example.diploma.dto.User;
-import com.example.diploma.entity.ImageEntity;
 import com.example.diploma.service.AuthService;
 import com.example.diploma.service.ImageService;
 import com.example.diploma.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +18,7 @@ import java.io.IOException;
 /**
  * @author anna
  */
-@Slf4j
+
 @CrossOrigin(value = "http://localhost:3000")
 @RequiredArgsConstructor
 @RestController
@@ -60,10 +57,6 @@ public class UserController {
     @GetMapping("/image/{id}")
     public ResponseEntity<byte[]> getImage(@PathVariable int id) throws IOException {
         long imageId = userService.getEntityById(id).getImage().getId();
-        ImageEntity image = imageService.getEntity(imageId);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.valueOf(image.getMediaType()));
-        headers.setContentLength(image.getFileSize());
-        return ResponseEntity.ok().headers(headers).body(imageService.getImage(imageId));
+        return ResponseEntity.ok(imageService.getImage(imageId));
     }
 }
