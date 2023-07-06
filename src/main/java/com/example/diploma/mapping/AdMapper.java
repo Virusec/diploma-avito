@@ -22,7 +22,7 @@ public class AdMapper {
                 entity.getDescription(), entity.getAuthor().getEmail(), entity.getImagePath(),
                 entity.getAuthor().getPhone(), entity.getPrice(), entity.getTitle());
     }
-//TODO: добавить обработку/сохранение картинки; аргумент imageId id
+
     public AdEntity createAdsToEntity(CreateAds ads, UserEntity author) {
         return new AdEntity(author, ads.getTitle(), ads.getPrice(), ads.getDescription());
     }

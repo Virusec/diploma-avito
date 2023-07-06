@@ -5,16 +5,18 @@ import com.example.diploma.dto.CreateAds;
 import com.example.diploma.dto.FullAds;
 import com.example.diploma.dto.ResponseWrapperAds;
 import com.example.diploma.entity.AdEntity;
+import com.example.diploma.entity.ImageEntity;
 import com.example.diploma.exception.FindNoEntityException;
 import com.example.diploma.mapping.AdMapper;
 import com.example.diploma.repository.AdRepository;
 import com.example.diploma.service.AdService;
+import com.example.diploma.service.ImageService;
 import com.example.diploma.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,18 +24,18 @@ import java.util.List;
  * @author anna
  */
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AdServiceImpl implements AdService {
     private final AdRepository adRepository;
     private final UserService userService;
+    private final ImageService imageService;
     private final AdMapper mapper;
 
     @Override
-    public Ads add(CreateAds properties, MultipartFile image, String email) {
+    public Ads add(CreateAds properties, MultipartFile image, String email) throws IOException {
         AdEntity ad = mapper.createAdsToEntity(properties, userService.getEntity(email));
-        log.info("Добавление нового объявления");
+        ad.setImage(imageService.saveImage(image));
         return mapper.entityToAdsDto(adRepository.save(ad));
     }
 
@@ -43,9 +45,10 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(int id) throws IOException {
+        ImageEntity image = getEntity(id).getImage();
         adRepository.deleteById(id);
-        log.info("Удаление объявления с id " + id);
+        imageService.deleteImage(image);
     }
 
     @Override
@@ -55,7 +58,6 @@ public class AdServiceImpl implements AdService {
         entity.setDescription(ads.getDescription());
         entity.setPrice(ads.getPrice());
         adRepository.save(entity);
-        log.info("Редактирование объявления с id " + id);
         return mapper.entityToAdsDto(entity);
     }
 
@@ -64,6 +66,16 @@ public class AdServiceImpl implements AdService {
         return adRepository.findById(id).orElseThrow(() -> new FindNoEntityException("объявление"));
     }
 
+    @Override
+    public void uploadImage(int id, MultipartFile image) throws IOException {
+        AdEntity adEntity = getEntity(id);
+        ImageEntity imageEntity = adEntity.getImage();
+        adEntity.setImage(imageService.saveImage(image));
+        adRepository.save(adEntity);
+        if (imageEntity != null) {
+            imageService.deleteImage(imageEntity);
+        }
+    }
 
     @Override
     public ResponseWrapperAds getAllAds() {

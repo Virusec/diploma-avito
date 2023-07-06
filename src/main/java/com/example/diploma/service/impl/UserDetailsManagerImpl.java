@@ -5,56 +5,41 @@ import com.example.diploma.entity.UserEntity;
 import com.example.diploma.exception.FindNoEntityException;
 import com.example.diploma.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 /**
  * @author anna
  */
 
-@Slf4j
 @RequiredArgsConstructor
 @Component
-public class UserDetailsManagerImpl implements UserDetailsManager {
+public class UserDetailsManagerImpl implements UserDetailsService {
 
     private final UserRepository repository;
 
-    @Override
-    public void changePassword(String oldPassword, String newPassword) {
-        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-        UserEntity entity = (UserEntity) loadUserByUsername(currentUser.getName());
+    public void changePassword(String newPassword, String name) {
+        UserEntity entity = getEntity(name);
         entity.setPassword(newPassword);
         repository.save(entity);
     }
 
-    @Override
     public boolean userExists(String username) {
         return repository.findByEmail(username).isPresent();
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        return new UserSecurity(repository.findByEmail(username)
-                .orElseThrow(() -> new FindNoEntityException("пользователь")));
+        return new UserSecurity(getEntity(username));
     }
 
-    @Override
-    public void createUser(UserDetails user) {
-        log.info("Регистрация нового пользователя");
-        repository.save(((UserSecurity)user).getEntity());
+    public UserEntity getEntity(String username) {
+        return repository.findByEmail(username)
+                .orElseThrow(() -> new FindNoEntityException("пользователь"));
     }
 
-    @Override
-    public void updateUser(UserDetails user) {
-
-    }
-
-    @Override
-    public void deleteUser(String username) {
-
+    public void createUser(UserEntity user) {
+        repository.save(user);
     }
 }

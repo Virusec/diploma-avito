@@ -5,8 +5,8 @@ import com.example.diploma.dto.CreateAds;
 import com.example.diploma.dto.FullAds;
 import com.example.diploma.dto.ResponseWrapperAds;
 import com.example.diploma.service.AdService;
+import com.example.diploma.service.ImageService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +15,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 
 /**
  * @author anna
  */
-@Slf4j
+
 @CrossOrigin(value = "http://localhost:3000")
 @RequiredArgsConstructor
 @RestController
@@ -27,6 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class AdController {
     private final AdService adService;
+    private final ImageService imageService;
+
 
     @GetMapping
     public ResponseEntity<ResponseWrapperAds> getAllAds() {
@@ -35,7 +39,7 @@ public class AdController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Ads> addAd(@RequestPart CreateAds properties, @RequestPart MultipartFile image,
-                                     Authentication auth) {
+                                     Authentication auth) throws IOException {
         return ResponseEntity.ok(adService.add(properties, image, auth.getName()));
     }
 
@@ -46,7 +50,7 @@ public class AdController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("@adServiceImpl.getEntity(#id).author.email.equals(#auth.name) or hasAuthority('DELETE_ANY_AD')")
-    public ResponseEntity<?> removeAd(@PathVariable int id, Authentication auth) {
+    public ResponseEntity<?> removeAd(@PathVariable int id, Authentication auth) throws IOException {
         adService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -62,10 +66,15 @@ public class AdController {
         return ResponseEntity.ok(adService.getAllMyAds(auth.getName()));
     }
 
-    //TODO: доделать
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateImage(@PathVariable int id, @RequestPart MultipartFile image) {
+    public ResponseEntity<?> updateImage(@PathVariable int id, @RequestPart MultipartFile image) throws IOException {
+        adService.uploadImage(id, image);
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/image/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable int id) throws IOException {
+        long imageId = adService.getEntity(id).getImage().getId();
+        return ResponseEntity.ok(imageService.getImage(imageId));
+    }
 }

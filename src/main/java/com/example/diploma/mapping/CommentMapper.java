@@ -21,8 +21,6 @@ public class CommentMapper {
                 entity.getPk(), entity.getText());
     }
 
-    //из Authentication берем name, по нему ищем UserEntity и передаем сюда
-    //AdEntity ищем по id
     public CommentEntity createCommentToEntity(CreateComment createComment, AdEntity ad, UserEntity author) {
         return new CommentEntity(author, LocalDateTime.now(), createComment.getText(), ad);
     }

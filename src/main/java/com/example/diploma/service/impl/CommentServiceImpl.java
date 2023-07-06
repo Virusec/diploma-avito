@@ -11,7 +11,6 @@ import com.example.diploma.service.AdService;
 import com.example.diploma.service.CommentService;
 import com.example.diploma.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,7 +22,6 @@ import java.util.List;
  * @author anna
  */
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -42,14 +40,12 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment add(int id, CreateComment comment, String name) {
         CommentEntity entity = mapper.createCommentToEntity(comment, adService.getEntity(id), userService.getEntity(name));
-        log.info("Добавление комментария к объявлению с id " + id);
         return mapper.entityToCommentDto(commentRepository.save(entity));
     }
 
     @Override
     public void delete(int commentId) {
         commentRepository.deleteById(commentId);
-        log.info("Удаление комментария с id " + commentId);
     }
 
     @Override
@@ -57,7 +53,6 @@ public class CommentServiceImpl implements CommentService {
         CommentEntity entity = getEntity(commentId);
         entity.setText(comment.getText() + "(отредактировал(а) " + userService.getEntity(email).getFirstName() +
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern(" dd MMMM yyyy в HH:mm:ss)")));
-        log.info("Редактирование комментраия с id " + commentId);
         return mapper.entityToCommentDto(commentRepository.save(entity));
     }
 
