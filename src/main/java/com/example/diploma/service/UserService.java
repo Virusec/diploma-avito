@@ -21,5 +21,8 @@ public interface UserService {
     void uploadImage(MultipartFile image, String name) throws IOException;
 
     UserEntity getEntityById(int id);
+    void changePassword(String newPassword, String name);
+    boolean userExists(String username);
+    void createUser(UserEntity user);
 }
 

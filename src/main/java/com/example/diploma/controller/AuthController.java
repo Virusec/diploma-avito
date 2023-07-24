@@ -22,7 +22,6 @@ import static com.example.diploma.dto.Role.USER;
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
-
     private final AuthService authService;
 
     @PostMapping("/login")
