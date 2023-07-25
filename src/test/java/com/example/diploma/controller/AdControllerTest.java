@@ -19,20 +19,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -94,27 +93,26 @@ class AdControllerTest {
     }
 
     //TODO доделать этот тест
-     @Test
-     @WithMockUser(username = email)
-     void addAd() throws Exception {
-         byte[] inputArray = "Test".getBytes();
-         MockMultipartFile mockMultipartFile = new MockMultipartFile("image", "image", MediaType.IMAGE_JPEG_VALUE, inputArray);
-         Authentication a = SecurityContextHolder.getContext().getAuthentication();
-
-         JSONObject createAdsJson = new JSONObject();
-         createAdsJson.put("description", description);
-         createAdsJson.put("price", price);
-         createAdsJson.put("title", title);
-         Map<String, Object> param =  new HashMap<>(2);
-         param.put("properties",createAdsJson);
-         param.put("auth", a);
-         mockMvc.perform(multipart("/ads")
-                         .file(mockMultipartFile)
-                         .flashAttrs(param));
-
-    }
     @Test
     @WithMockUser(username = email)
+    void addAd() throws Exception {
+        byte[] inputArray = "Test".getBytes();
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("image", "image", MediaType.IMAGE_JPEG_VALUE, inputArray);
+
+        JSONObject properties = new JSONObject();
+        properties.put("description", description);
+        properties.put("price", price);
+        properties.put("title", title);
+        mockMvc.perform(multipart(HttpMethod.POST, "/ads")
+                .file(mockMultipartFile)
+                .content(properties.toString())
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .with(csrf()));
+
+    }
+
+    @Test
+    @WithMockUser
     void getAdsTest() throws Exception {
         AdEntity entity = new AdEntity(pk, user, title, price, description, adImage);
         when(adRepository.findById(pk)).thenReturn(Optional.of(entity));
@@ -143,7 +141,37 @@ class AdControllerTest {
     }
 
     @Test
-    void removeAd() {
+    @WithMockUser
+    void removeAdTest() throws Exception {
+        AdEntity entity = new AdEntity(pk, user, title, price, description, adImage);
+        when(adRepository.findById(pk)).thenReturn(Optional.of(entity));
+        mockMvc.perform(MockMvcRequestBuilders.delete("/ads/{id}", pk)
+                        .content(String.valueOf(pk))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf()))
+                .andExpect(status().isNoContent());
+        verify(adRepository).deleteById(pk);
+        verify(imageRepository).delete(adImage);
+    }
+
+    @Test
+    void removeAdUnauthorizedTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/ads/{id}", pk)
+                        .content(String.valueOf(pk))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf()))
+                .andExpect(status().isUnauthorized());
+
+    }
+
+    @Test
+    @WithMockUser
+    void removeAdForbiddenTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/ads/{id}", pk)
+                        .content(String.valueOf(pk))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+
     }
 
     @Test
