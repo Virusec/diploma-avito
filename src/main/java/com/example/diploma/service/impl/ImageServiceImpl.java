@@ -31,6 +31,7 @@ public class ImageServiceImpl implements ImageService {
         ImageEntity entity = repository.save(new ImageEntity());
         Path filePath = getPath(entity);
         Files.createDirectories(filePath.getParent());
+        Files.deleteIfExists(getPath(entity));
         try (
                 InputStream is = image.getInputStream();
                 OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
