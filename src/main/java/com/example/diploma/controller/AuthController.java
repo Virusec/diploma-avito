@@ -22,7 +22,6 @@ import static com.example.diploma.dto.Role.USER;
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
-
     private final AuthService authService;
 
     @PostMapping("/login")
@@ -38,7 +37,7 @@ public class AuthController {
     public ResponseEntity<?> register(@RequestBody RegisterReq req) {
         Role role = req.getRole() == null ? USER : req.getRole();
         if (authService.register(req, role)) {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.status(201).build();
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

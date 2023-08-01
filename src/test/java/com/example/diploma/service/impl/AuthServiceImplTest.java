@@ -30,6 +30,8 @@ class AuthServiceImplTest {
     @Mock
     private UserDetailsManagerImpl manager;
     @Mock
+    private UserServiceImpl userService;
+    @Mock
     private UserMapper mapper;
     @Spy
     private BCryptPasswordEncoder encoder;
@@ -45,21 +47,21 @@ class AuthServiceImplTest {
     @Test
     void loginTrue() {
         UserSecurity userSecurity = getUserSecurity();
-        when(manager.userExists(userName)).thenReturn(true);
+        when(userService.userExists(userName)).thenReturn(true);
         when(manager.loadUserByUsername(userName)).thenReturn(userSecurity);
         Assertions.assertTrue(authService.login(userName, password));
     }
 
     @Test
     void loginIfUserNotExists() {
-        when(manager.userExists(userName)).thenReturn(false);
+        when(userService.userExists(userName)).thenReturn(false);
         Assertions.assertFalse(authService.login(userName, password));
     }
 
     @Test
     void loginIfInvalidPassword() {
         UserSecurity userSecurity = getUserSecurity();
-        when(manager.userExists(userName)).thenReturn(true);
+        when(userService.userExists(userName)).thenReturn(true);
         when(manager.loadUserByUsername(userName)).thenReturn(userSecurity);
         when(encoder.matches(password, userSecurity.getPassword())).thenReturn(false);
         Assertions.assertFalse(authService.login(userName, password));
@@ -69,7 +71,7 @@ class AuthServiceImplTest {
     @Test
     void registerIfAlreadyExists() {
         RegisterReq req = getRegisterReq();
-        when(manager.userExists(userName)).thenReturn(true);
+        when(userService.userExists(userName)).thenReturn(true);
         Assertions.assertFalse(authService.register(req, role));
     }
 
@@ -77,10 +79,10 @@ class AuthServiceImplTest {
     void registerSuccessfully() {
         RegisterReq req = getRegisterReq();
         UserEntity entity = getEntity();
-        when(manager.userExists(userName)).thenReturn(false);
+        when(userService.userExists(userName)).thenReturn(false);
         when(mapper.registerReqDtoToEntity(req)).thenReturn(entity);
         Assertions.assertTrue(authService.register(req, role));
-        verify(manager).createUser(entity);
+        verify(userService).createUser(entity);
     }
 
 
@@ -94,7 +96,7 @@ class AuthServiceImplTest {
         when(manager.loadUserByUsername(userName)).thenReturn(user);
         when(encoder.encode(renewedPassword)).thenReturn(newEncodePass);
         Assertions.assertTrue(authService.setPassword(newPassword, userName));
-        verify(manager).changePassword(newEncodePass, userName);
+        verify(userService).changePassword(newEncodePass, userName);
     }
 
     @Test

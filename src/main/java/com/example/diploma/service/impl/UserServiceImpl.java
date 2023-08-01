@@ -60,4 +60,21 @@ public class UserServiceImpl implements UserService {
     public UserEntity getEntityById(int id) {
         return userRepository.findById(id).orElseThrow(() -> new FindNoEntityException("пользователь"));
     }
+
+    @Override
+    public void changePassword(String newPassword, String name) {
+        UserEntity entity = getEntity(name);
+        entity.setPassword(newPassword);
+        userRepository.save(entity);
+    }
+
+    @Override
+    public boolean userExists(String username) {
+        return userRepository.findByEmail(username).isPresent();
+    }
+
+    @Override
+    public void createUser(UserEntity user) {
+        userRepository.save(user);
+    }
 }
